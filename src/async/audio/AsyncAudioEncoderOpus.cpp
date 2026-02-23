@@ -132,6 +132,7 @@ AudioEncoderOpus::AudioEncoderOpus(void)
   setMaxBandwidth(OPUS_BANDWIDTH_MEDIUMBAND);
   setBandwidth(OPUS_AUTO);
   setSignalType(OPUS_SIGNAL_VOICE);
+  setComplexity(10);
   enableDtx(false);
 #if OPUS_MAJOR > 0
   setLsbDepth(16);
