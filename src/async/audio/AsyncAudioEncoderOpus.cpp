@@ -129,7 +129,7 @@ AudioEncoderOpus::AudioEncoderOpus(void)
   setFrameSize(20);
   setBitrate(20000);
   enableVbr(true);
-  setMaxBandwidth(OPUS_BANDWIDTH_MEDIUMBAND);
+  setMaxBandwidth(OPUS_BANDWIDTH_WIDEBAND);
   setBandwidth(OPUS_AUTO);
   setSignalType(OPUS_SIGNAL_VOICE);
   setComplexity(10);

@@ -130,8 +130,9 @@ ANNOUNCE_REMOTE_MIN_INTERVAL=300
 QSY_PENDING_TIMEOUT=15
 #DEFAULT_LANG=en_US
 #VERBOSE=1
-# Opus encoder options (complexity=10 and bitrate=20000 are the defaults;
-# valid complexity range is 0-10, higher values give better quality at higher CPU cost)
+# Opus encoder options. Defaults are complexity=10, bitrate=20000, wideband.
+# WIDEBAND (8 kHz) is the maximum meaningful bandwidth for 16 kHz audio.
+# FULLBAND/SUPERWIDEBAND both auto-clamp to WIDEBAND at 16 kHz input.
 #OPUS_ENC_FRAME_SIZE=20
 #OPUS_ENC_COMPLEXITY=10
 #OPUS_ENC_BITRATE=20000
