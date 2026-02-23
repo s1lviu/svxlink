@@ -273,6 +273,11 @@ SQL_SIGLEV_CLOSE_THRESH=10
 DEEMPHASIS=0
 #SQL_TAIL_ELIM=300
 #PREAMP=6
+# Set VOICE_FILTER_BYPASS=1 when using a PC microphone for direct VoIP/reflector
+# use (no radio). This bypasses the radio-specific 300-5000 Hz bandpass filter
+# and post-clipper splatter filter, giving the Opus codec full access to the
+# microphone's bandwidth (Opus MEDIUMBAND reaches ~200-6000 Hz).
+#VOICE_FILTER_BYPASS=0
 PEAK_METER=1
 DTMF_DEC_TYPE=INTERNAL
 DTMF_MUTING=1
