@@ -280,6 +280,7 @@ class LocalRxBase : public Rx
     HdlcDeframer *              ob_afsk_deframer;
     HdlcDeframer *              ib_afsk_deframer;
     bool                        audio_dev_keep_open;
+    bool                        voice_filter_bypass;
     Async::AudioSplitter *      fullband_splitter;
 
     int audioRead(float *samples, int count);

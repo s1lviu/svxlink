@@ -423,6 +423,7 @@ class AudioEncoderOpus : public AudioEncoder
     
     AudioEncoderOpus(const AudioEncoderOpus&);
     AudioEncoderOpus& operator=(const AudioEncoderOpus&);
+    opus_int32 parseBandwidth(const std::string &str);
     
 };  /* class AudioEncoderOpus */
 

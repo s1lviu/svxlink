@@ -118,7 +118,7 @@ AudioEncoderOpus::AudioEncoderOpus(void)
   : enc(0), frame_size(0), sample_buf(0), buf_len(0)
 {
   int error;
-  enc = opus_encoder_create(INTERNAL_SAMPLE_RATE, 1, OPUS_APPLICATION_AUDIO,
+  enc = opus_encoder_create(INTERNAL_SAMPLE_RATE, 1, OPUS_APPLICATION_VOIP,
                             &error);
   if (error != OPUS_OK)
   {
@@ -127,11 +127,12 @@ AudioEncoderOpus::AudioEncoderOpus(void)
   }
 
   setFrameSize(20);
-  setBitrate(20000);
+  setBitrate(32000);
   enableVbr(true);
-  setMaxBandwidth(OPUS_BANDWIDTH_MEDIUMBAND);
+  setMaxBandwidth(OPUS_BANDWIDTH_WIDEBAND);
   setBandwidth(OPUS_AUTO);
   setSignalType(OPUS_SIGNAL_VOICE);
+  setComplexity(10);
   enableDtx(false);
 #if OPUS_MAJOR > 0
   setLsbDepth(16);
@@ -181,6 +182,90 @@ void AudioEncoderOpus::setOption(const std::string &name,
   {
     enableConstrainedVbr(atoi(value.c_str()) != 0);
   }
+  else if (name == "MAX_BANDWIDTH")
+  {
+    opus_int32 bw = parseBandwidth(value);
+    if (bw != -1)
+    {
+      setMaxBandwidth(bw);
+    }
+    else
+    {
+      cerr << "*** WARNING AudioEncoderOpus: Unknown MAX_BANDWIDTH value \""
+           << value << "\"\n";
+    }
+  }
+  else if (name == "BANDWIDTH")
+  {
+    opus_int32 bw = parseBandwidth(value);
+    if (bw != -1)
+    {
+      setBandwidth(bw);
+    }
+    else
+    {
+      cerr << "*** WARNING AudioEncoderOpus: Unknown BANDWIDTH value \""
+           << value << "\"\n";
+    }
+  }
+  else if (name == "SIGNAL")
+  {
+    if (value == "AUTO")
+    {
+      setSignalType(OPUS_AUTO);
+    }
+    else if (value == "VOICE")
+    {
+      setSignalType(OPUS_SIGNAL_VOICE);
+    }
+    else if (value == "MUSIC")
+    {
+      setSignalType(OPUS_SIGNAL_MUSIC);
+    }
+    else
+    {
+      cerr << "*** WARNING AudioEncoderOpus: Unknown SIGNAL value \""
+           << value << "\"\n";
+    }
+  }
+  else if (name == "APPLICATION")
+  {
+    if (value == "VOIP")
+    {
+      setApplicationType(OPUS_APPLICATION_VOIP);
+    }
+    else if (value == "AUDIO")
+    {
+      setApplicationType(OPUS_APPLICATION_AUDIO);
+    }
+    else if (value == "LOWDELAY")
+    {
+      setApplicationType(OPUS_APPLICATION_RESTRICTED_LOWDELAY);
+    }
+    else
+    {
+      cerr << "*** WARNING AudioEncoderOpus: Unknown APPLICATION value \""
+           << value << "\"\n";
+    }
+  }
+  else if ((name == "FEC") || (name == "INBAND_FEC"))
+  {
+    enableInbandFec(atoi(value.c_str()) != 0);
+  }
+  else if (name == "PACKET_LOSS")
+  {
+    setExpectedPacketLoss(atoi(value.c_str()));
+  }
+  else if (name == "DTX")
+  {
+    enableDtx(atoi(value.c_str()) != 0);
+  }
+#if OPUS_MAJOR > 0
+  else if (name == "LSB_DEPTH")
+  {
+    setLsbDepth(atoi(value.c_str()));
+  }
+#endif
   else
   {
     cerr << "*** WARNING AudioEncoderOpus: Unknown option \""
@@ -675,6 +760,34 @@ int AudioEncoderOpus::writeSamples(const float *samples, int count)
  *
  ****************************************************************************/
 
+opus_int32 AudioEncoderOpus::parseBandwidth(const std::string &str)
+{
+  if (str == "AUTO")
+  {
+    return OPUS_AUTO;
+  }
+  else if (str == "NARROWBAND")
+  {
+    return OPUS_BANDWIDTH_NARROWBAND;
+  }
+  else if (str == "MEDIUMBAND")
+  {
+    return OPUS_BANDWIDTH_MEDIUMBAND;
+  }
+  else if (str == "WIDEBAND")
+  {
+    return OPUS_BANDWIDTH_WIDEBAND;
+  }
+  else if (str == "SUPERWIDEBAND")
+  {
+    return OPUS_BANDWIDTH_SUPERWIDEBAND;
+  }
+  else if (str == "FULLBAND")
+  {
+    return OPUS_BANDWIDTH_FULLBAND;
+  }
+  return -1;
+} /* AudioEncoderOpus::parseBandwidth */
 
 
 /*

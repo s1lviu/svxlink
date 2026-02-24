@@ -34,6 +34,29 @@ either C++ or TCL. Examples of modules are:
 Qtel, the Qt EchoLink client, is a graphical application used to access the
 EchoLink network.
 
+== VoIP Audio Enhancements ==
+Recent audio-path updates make SvxLink better suited for PC microphone and
+reflector VoIP-style operation:
+
+* Opus encoder option wiring now supports additional `OPUS_ENC_*` settings:
+  `APPLICATION`, `MAX_BANDWIDTH`, `BANDWIDTH`, `SIGNAL`, `FEC`/`INBAND_FEC`,
+  `PACKET_LOSS`, `DTX` and `LSB_DEPTH`.
+* Opus defaults are tuned for speech quality:
+  `APPLICATION=VOIP`, `BITRATE=32000`, `MAX_BANDWIDTH=WIDEBAND`,
+  `COMPLEXITY=10`.
+* `VOICE_FILTER_BYPASS` can be used to skip radio-oriented speech shaping
+  filters in RX/TX paths when cleaner microphone audio is preferred.
+* TX-side FM shaping stages (limiter, clipper and voiceband filter) are
+  bypassed when `VOICE_FILTER_BYPASS=1` and also auto-bypassed when
+  `PTT_TYPE=NONE`.
+
+Example settings:
+
+* `[ReflectorLogic]`: `OPUS_ENC_APPLICATION=VOIP`,
+  `OPUS_ENC_MAX_BANDWIDTH=FULLBAND`, `OPUS_ENC_SIGNAL=VOICE`
+* `[Rx1]`: `VOICE_FILTER_BYPASS=1`
+* `[Tx1]`: `VOICE_FILTER_BYPASS=1` (optional when `PTT_TYPE=NONE`)
+
 == Resources ==
 These are some of the resources connected to SvxLink:
 
